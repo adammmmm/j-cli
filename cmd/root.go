@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"runtime"
 	"time"
 
 	"github.com/adammmmm/go-junos"
@@ -27,6 +28,7 @@ var (
 	backoff    time.Duration
 	jsonOutput bool
 )
+
 var rootCmd = &cobra.Command{
 	Use:   "j-cli",
 	Short: "Junos Tool for Commands and Configuration",
@@ -91,6 +93,7 @@ func readDeviceJson(deviceFile string) ([]string, error) {
 }
 
 func init() {
+	workerCount := max(1, runtime.NumCPU())
 	rootCmd.PersistentFlags().StringVarP(
 		&deviceFile,
 		"devices",
@@ -111,7 +114,7 @@ func init() {
 		&workers,
 		"workers",
 		"w",
-		10,
+		workerCount,
 		"Number of concurrent device workers",
 	)
 	rootCmd.PersistentFlags().DurationVarP(
@@ -127,7 +130,6 @@ func init() {
 		2,
 		"Number of retries per device on failure",
 	)
-
 	rootCmd.PersistentFlags().DurationVar(
 		&backoff,
 		"backoff",
@@ -140,5 +142,4 @@ func init() {
 		false,
 		"Output results as JSON",
 	)
-
 }
