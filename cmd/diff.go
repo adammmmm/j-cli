@@ -16,10 +16,7 @@ var diffCmd = &cobra.Command{
 
 func diffConfigCommand(cmd *cobra.Command, args []string) {
 	ctx := context.Background()
-	var progress *Progress
-	if !jsonOutput {
-		progress = NewProgress(len(devices))
-	}
+	progress := NewProgress(len(devices))
 	cmdResult := CommandResult{
 		Command: "diff",
 		Workers: workers,

@@ -17,7 +17,8 @@ func NewProgress(total int) *Progress {
 
 func (p *Progress) Increment() {
 	cur := atomic.AddInt64(&p.current, 1)
-	fmt.Fprintf(os.Stderr, "Processed %d/%d devices\r", cur, p.total)
+	percent := float64(cur) / float64(p.total) * 100
+	fmt.Fprintf(os.Stderr, "Processed %d/%d devices (%.2f%%)\r", cur, p.total, percent)
 
 	if cur == p.total {
 		fmt.Fprintln(os.Stderr)
